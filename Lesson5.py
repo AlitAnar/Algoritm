@@ -1,0 +1,122 @@
+'''1. Пользователь вводит данные о количестве предприятий, их наименования и
+прибыль за 4 квартала (т.е. 4 отдельных числа) для каждого предприятия.
+Программа должна определить среднюю прибыль (за год для всех предприятий) и
+вывести наименования предприятий, чья прибыль выше среднего и отдельно вывести
+наименования предприятий, чья прибыль ниже среднего.
+Примечание: для решения задач попробуйте применить какую-нибудь коллекцию из
+модуля collections
+'''
+
+import collections
+import random
+
+
+def sum_tuple(numbers):
+    '''tuple --> sum'''
+
+    total_sum = 0
+    for sum_q in numbers:
+        total_sum += sum_q
+        return total_sum
+
+
+Enterprise = collections.namedtuple('Enterprise', ['q1', 'q2', 'q3', 'q4'])
+
+base_enterprise = {}
+
+n = int(input("Количество предприятий: "))
+
+for i in range(n):
+    name = input(str(i+1) + '-е предприятие: ')
+    profit_q1 = int(input('Прибыль за 1-й квартал: '))
+    profit_q2 = int(input('Прибыль за 2-й квартал: '))
+    profit_q3 = int(input('Прибыль за 3-й квартал: '))
+    profit_q4 = int(input('Прибыль за 4-й квартал: '))
+    base_enterprise[name] = Enterprise(
+        q1=profit_q1,
+        q2=profit_q2,
+        q3=profit_q3,
+        q4=profit_q4
+    )
+
+base_enterprise['Name1'] = Enterprise(
+    q1=random.randint(100, 500),
+    q2=random.randint(100, 500),
+    q3=random.randint(100, 500),
+    q4=random.randint(100, 500)
+)
+
+base_enterprise['Name2'] = Enterprise(
+    q1=random.randint(100, 500),
+    q2=random.randint(100, 500),
+    q3=random.randint(100, 500),
+    q4=random.randint(100, 500)
+)
+
+total_profit = ()
+
+for name, profit in base_enterprise.items():
+    print(f'Предприятие: {name} прибыль за год - {sum(profit)}')
+    total_profit += profit
+
+avg_profit_total = sum(total_profit) / len(base_enterprise)
+print(f'Средняя прибыль за год для всех предприятий {avg_profit_total}')
+
+print('Предприятия, у которых прибыль выше среднего:')
+
+for name, profit in base_enterprise.items():
+    if sum(profit) > avg_profit_total:
+        print(f'{name} - {sum(profit)}')
+
+for name, profit in base_enterprise.items():
+    if sum(profit) < avg_profit_total:
+        print(f'{name} - {sum(profit)}')
+
+
+
+
+# 2. Написать программу сложения и умножения двух шестнадцатеричных чисел.
+# При этом каждое число представляется как массив, элементы которого это цифры числа.
+#
+# Например, пользователь ввёл A2 и C4F.
+# Сохранить их как [‘A’, ‘2’] и [‘C’, ‘4’, ‘F’] соответственно.
+# Сумма чисел из примера: [‘C’, ‘F’, ‘1’].
+# Произведение - [‘7’, ‘C’, ‘9’, ‘F’, ‘E’].
+
+from collections import defaultdict
+from collections import deque
+
+
+def my_dex(string):
+    dex = 0
+    num = deque(string)
+    num.reverse()
+    for i in range(len(num)):
+        dex += table[num[i]] * 16 ** i
+    return dex
+
+
+def my_hex(numb):
+    num = deque()
+    while numb > 0:
+        d = numb % 16
+        for i in table:
+            if table[i] == d:
+                num.append(i)
+        numb //= 16
+    num.reverse()
+    return list(num)
+
+
+signs = '0123456789ABCDEF'
+table = defaultdict(int)
+counter = 0
+for key in signs:
+    table[key] += counter
+    counter += 1
+
+num_1 = my_dex(input('Введите первое число в шестнадцатиричном формате:\n ').upper())
+num_2 = my_dex(input('Введите второе число в шестнадцатиричном формате:\n ').upper())
+
+print(f'Сумма чисел: {my_hex(num_1 + num_2)}')
+print(f'Произведение чисел: {my_hex(num_1 * num_2)}')
